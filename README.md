@@ -7,4 +7,5 @@ Components
 * Tokenizers
 * Stemmers
 * Reverse Stemmer 
+* Useful Corpora
 * Naiv Bayes
