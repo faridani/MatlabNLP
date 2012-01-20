@@ -8,5 +8,5 @@ Components
 * Stemmers
 * Reverse Stemmer 
 * Useful Corpora
-** Declaration of Independence
+    * Declaration of Independence
 * Naiv Bayes
