@@ -12,4 +12,13 @@ Components
 * Reverse Stemmer 
 * Useful Corpora
     * Declaration of Independence
-* Naiv Bayes
+* Learning Models
+    * Naiv Bayes
+	* Logistic Regression
+	* SVM
+* Evaluation Measures
+    * Precision
+	* Recall
+	* Fallout
+	* F1-measure
+	
