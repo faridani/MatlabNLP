@@ -1,16 +1,22 @@
-
-
 % Genralized Sentiment Analysis
-% 
+%
 
 clc;
 close all;
 clear all;
 
+tic;
+% 
+% fid = fopen('data\english.stop');
+% 
+% stopwords = textscan(fid, '%s');
+% stopwords = stopwords{1,1};
+% fclose(fid);
 
-% params 
+
+% params
 % n:minimum appearances of a stem
-n=3;
+n=30;
 
 % reading the data file
 % xls is easier to read than csv
@@ -22,8 +28,9 @@ style_ratings = num(1:size(num,1),1);
 comfort_ratings = num(1:size(num,1),4);
 overal_ratings = num(1:size(num,1),5);
 
-descriptions = descriptions(1:100);
+%descriptions = descriptions(1:1000);
 g = containers.Map();
+toc;
 
 for i = 1:size(descriptions,1)
     comment = descriptions{i};
@@ -44,19 +51,19 @@ for i = 1:size(descriptions,1)
     
     
 end
-
-selectedheaders =containers.Map()
+toc;
+selectedheaders =containers.Map();
 gkeys = keys(g);
-i=0
+
 for i=1:size(gkeys,2)
     if g(gkeys{i})>=n
         
         selectedheaders(gkeys{i})=1;
         
     end
-        
+    
 end
-headers = keys(selectedheaders)
+headers = keys(selectedheaders);
 
 outputMatrix = [];
 for i = 1:size(descriptions,1)
@@ -68,15 +75,20 @@ for i = 1:size(descriptions,1)
     comment = [];
     for j =1:size(r,2)
         word = porterStemmer(cell2mat(r(j)));
-       
+        
         comment = [comment,' ',word];
     end
     outputMatrix = [outputMatrix;term_count(comment, headers)];
     
+    if mod(i,300)==0
+        a = sprintf('%d', i);
+        disp(a)
+    end
     
     
     
 end
 
 
+toc;
 
