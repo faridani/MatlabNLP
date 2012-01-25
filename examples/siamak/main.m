@@ -7,11 +7,11 @@ clear all;
 
 tic;
 % 
-% fid = fopen('data\english.stop');
-% 
-% stopwords = textscan(fid, '%s');
-% stopwords = stopwords{1,1};
-% fclose(fid);
+ fid = fopen('data\english.stop');
+ 
+ stopwords = textscan(fid, '%s');
+ stopwords = stopwords{1,1};
+ fclose(fid);
 
 
 % params
@@ -28,7 +28,12 @@ style_ratings = num(1:size(num,1),1);
 comfort_ratings = num(1:size(num,1),4);
 overal_ratings = num(1:size(num,1),5);
 
-%descriptions = descriptions(1:1000);
+% only take m data points
+m=5000;
+descriptions = descriptions(1:m);
+style_ratings = style_ratings(1:m);
+comfort_ratings = comfort_ratings(1:m);
+overal_ratings = overal_ratings(1:m);
 g = containers.Map();
 toc;
 
@@ -39,9 +44,10 @@ for i = 1:size(descriptions,1)
     r=regexp(comment,' ','split');
     for j =1:size(r,2)
         word = porterStemmer(cell2mat(r(j)));
-        if isKey(g, word)
+        tfflag = ~isStopWord(word, stopwords);
+        if isKey(g, word) && tfflag
             g(word) = g(word)+1;
-        else
+        elseif tfflag
             g(word) = 1;
         end
         
@@ -91,4 +97,9 @@ end
 
 
 toc;
+csvwrite('forWeka_featuresonly.csv', outputMatrix);
+
+outputmatrix_all = [style_ratings,comfort_ratings,overal_ratings, outputMatrix];
+outputmatrix_all = [ones(1,size(outputmatrix_all,2));outputmatrix_all];
+csvwrite('forWeka_everything.csv', outputmatrix_all);
 
