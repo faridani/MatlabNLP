@@ -29,7 +29,10 @@ comfort_ratings = num(1:size(num,1),4);
 overal_ratings = num(1:size(num,1),5);
 
 % only take m data points
-m=5000;
+
+
+m=50;
+m = length(descriptions);
 descriptions = descriptions(1:m);
 style_ratings = style_ratings(1:m);
 comfort_ratings = comfort_ratings(1:m);
@@ -71,7 +74,7 @@ for i=1:size(gkeys,2)
 end
 headers = keys(selectedheaders);
 
-outputMatrix = [];
+outputMatrix = zeros(m,length(headers));
 for i = 1:size(descriptions,1)
     comment = descriptions{i};
     comment = SanitizeComment(comment);
@@ -84,7 +87,7 @@ for i = 1:size(descriptions,1)
         
         comment = [comment,' ',word];
     end
-    outputMatrix = [outputMatrix;term_count(comment, headers)];
+    outputMatrix(i,:) = term_count(comment, headers);
     
     if mod(i,300)==0
         a = sprintf('%d', i);
