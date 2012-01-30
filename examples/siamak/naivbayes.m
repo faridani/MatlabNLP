@@ -1,8 +1,8 @@
 % predicting numerical values using Naiv Bayes
-clc;
-close all;
+
 clear all;
- 
+
+disp('====Naive Bayes===');
 disp('Reading featur vector');
 
 featurs = csvread('forWeka_featuresonly.csv');
@@ -40,8 +40,8 @@ disp('Naiv Bayes ');
 tic;
 %[B,dev,stats] = mnrfit(trainingset, responsevals_training(:,1));
 
-a = responsevals_training(:,1)';
-b = responsevals_test(:,1)';
+a = responsevals_training(:,3)';
+b = responsevals_test(:,3)';
 %remove this part
 %a = [a(1:96),a(98:120)];
 %trainingset = [trainingset(1:96,:); trainingset(98:120,:)];

@@ -1,6 +1,5 @@
 % predicting numerical values using Linear Regression
-clc;
-close all;
+
 clear all;
  
 disp('Reading featur vector');

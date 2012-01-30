@@ -1,9 +1,6 @@
 % predicting numerical values using CCA regression
 
-clc;
-close all;
-clear all;
- 
+disp('=====CCA Regression==');
 disp('Reading featur vector');
 
 featurs = csvread('forWeka_featuresonly.csv');
@@ -40,12 +37,12 @@ disp('Multiple linear regression');
 
 tic;
 
-[Wx, Wy, r]  = canoncorr(trainingset,responsevals_training);
+[Wx, Wy, r, U, V]  = canoncorr(trainingset,responsevals_training);
 
-responses = round(testset*Wy);
-responses(responses>5)=5;
-responses(responses<0)=0;
-cMat2 = confusionmat(responses(:,2),responsevals_test(:,1))
+responses = round(testset*Wx*inv(Wy));
+%responses(responses>5)=5;
+%responses(responses<0)=0;
+cMat2 = confusionmat(responses(:,3),responsevals_test(:,3))
 
 toc;
 

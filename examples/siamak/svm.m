@@ -1,13 +1,12 @@
 % predicting numerical values using Support Vector Machines
-clc;
-close all;
+
 clear all;
 
 disp('Reading featur vector');
 
 featurs = csvread('forWeka_featuresonly.csv');
 %featurs = [featurs(1:374,:);featurs(376:377,:)];
-num_data = 374; %374 works
+num_data = 1000%374; %374 works
 size_training = floor(.6*num_data);
 
 trainingset = featurs(1:size_training,:);
@@ -39,8 +38,8 @@ disp('Support Vector Machines');
 
 tic;
 
-a_orig = responsevals_training(:,1)';
-b_orig = responsevals_test(:,1)';
+a_orig = responsevals_training(:,3)';
+b_orig = responsevals_test(:,3)';
 b_out = [];
 for i=5:-1:1
     disp(i);

@@ -1,8 +1,8 @@
 % predicting numerical values using Discreminate Analysis
-clc;
-close all;
+
 clear all;
  
+disp('===REgress Tree===');
 disp('Reading featur vector');
 
 featurs = csvread('forWeka_featuresonly.csv');
@@ -39,8 +39,8 @@ disp('Multiple linear regression');
 
 tic;
 
-a = responsevals_training(:,1)';
-b = responsevals_test(:,1)';
+a = responsevals_training(:,3)';
+b = responsevals_test(:,3)';
 
 
 

@@ -1,8 +1,8 @@
 % predicting numerical values using Linear Regression
-clc;
-close all;
+
 clear all;
- 
+
+disp('===Linear Regression===');
 disp('Reading featur vector');
 
 featurs = csvread('forWeka_featuresonly.csv');
