@@ -5,10 +5,10 @@ clear all;
 disp('====Naive Bayes===');
 disp('Reading featur vector');
 
-featurs = csvread('forWeka_featuresonly.csv');
+featurs = csvread('full featured dataset\forWeka_featuresonly.csv');
 
-num_data = 5000;
-size_training = floor(.6*num_data);
+num_data = size(featurs,1); %5000;
+size_training = floor(.8*num_data);
 
 trainingset = featurs(1:size_training,:);
 testset = featurs((size_training+1):num_data,:);

@@ -5,9 +5,20 @@ clear all;
 disp('====Naive Bayes===');
 disp('Reading featur vector');
 
+featurization = 'multinomial'; % 'bernouli', 'tfidf'
+
+
 featurs = csvread('full featured dataset\forWeka_featuresonly.csv');
 
-num_data = 5000;
+if featurization=='multinomial'
+    %just pass
+elseif featurization=='bernouli'
+    featurs = (featurs>0)
+elseif featurization=='tfidf'
+end
+
+        
+num_data = size(featurs,1); %5000;
 size_training = floor(.8*num_data);
 
 trainingset = featurs(1:size_training,:);
