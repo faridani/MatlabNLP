@@ -1,4 +1,4 @@
-MatlabNLP is a collection of efficient algorithms and data structures and well-tested functions for doing Natural Language Processing in the Matlab environment. 
+MatlabNLP is a collection of efficient algorithms, data structures and well-tested functions for doing Natural Language Processing in the Matlab environment. 
 
 Objective
 ==================
