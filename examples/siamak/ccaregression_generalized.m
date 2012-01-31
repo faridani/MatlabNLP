@@ -1,8 +1,6 @@
-% predicting numerical values using Naiv Bayes
+% predicting numerical values using CCA regression
 
-clear all;
-
-disp('====Naive Bayes===');
+disp('=====CCA Regression==');
 disp('Reading featur vector');
 
 featurization = 'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
@@ -10,19 +8,20 @@ featurization = 'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
 
 featurs = csvread('full featured dataset\forWeka_featuresonly.csv');
 featurs = featurs(:,2:size(featurs,2));
-if featurization=='multinomial'
+if strcmp(featurization,'multinomial')
     %just pass
-elseif featurization=='bernouli'
+elseif strcmp(featurization,'bernouli')
     featurs = (featurs>0);
-elseif featurization=='tfidf'
+elseif strcmp(featurization,'tfidf')
+    
     occurance = (featurs>0);
     idf = log(size(featurs,1)./sum(occurance));
     featurs = featurs.*repmat( idf, size(featurs,1),1);
 end
 
-        
 num_data = size(featurs,1); %5000;
 size_training = floor(.8*num_data);
+
 
 trainingset = featurs(1:size_training,:);
 testset = featurs((size_training+1):num_data,:);
@@ -48,25 +47,20 @@ responsevals = [style_ratings, comfort_ratings, overal_ratings];
 
 responsevals_training = responsevals(1:size_training,:);
 responsevals_test = responsevals((size_training+1):num_data,:);
-disp('Naiv Bayes ');
-% http://www.mathworks.com/help/toolbox/stats/naivebayesclass.html
+disp('linear CCA regression');
+% http://www.mathworks.com/help/toolbox/stats/regress.html
 
 tic;
-%[B,dev,stats] = mnrfit(trainingset, responsevals_training(:,1));
 
-a = responsevals_training(:,3)';
-b = responsevals_test(:,3)';
-%remove this part
-%a = [a(1:96),a(98:120)];
-%trainingset = [trainingset(1:96,:); trainingset(98:120,:)];
+[Wx, Wy, r, U, V]  = canoncorr(trainingset,responsevals_training);
+% in [A,B,r,U,V],  U and V are cannonical scores
+% U = (X-repmat(mean(X),N,1))*A
+% V = (Y-repmat(mean(Y),N,1))*B
 
-O1 = NaiveBayes.fit(trainingset,a,'dist','mn'); % or  'mvmn'
-C2 = O1.predict(testset);
-cMat2 = confusionmat(b,C2)
+% correct this part responses = round(testset*Wx*inv(Wy));
+%responses(responses>5)=5;
+%responses(responses<0)=0;
+cMat2 = confusionmat(responses(:,3),responsevals_test(:,3))
 
-disp('Second Kernel');
-O1 = NaiveBayes.fit(trainingset,a,'dist','mvmn'); % or  'mvmn'
-C2 = O1.predict(testset);
-cMat2 = confusionmat(b,C2)
 toc;
 
