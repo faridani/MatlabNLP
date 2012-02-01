@@ -6,13 +6,14 @@ disp('Reading featur vector');
 
 
 
-for feat = 1:3
+for feat = 1:1
     possiblefeaturizations =  {'bernouli', 'tfidf','multinomial'}
     %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
     featurization  = possiblefeaturizations{feat}
     featurs = csvread('data\forWeka_featuresonly.csv');
     featurs = featurs(:,2:size(featurs,2));
     
+    % killed my computer ones featurs = sparse(featurs);
     
     num_data = size(featurs,1); %5000;
     
