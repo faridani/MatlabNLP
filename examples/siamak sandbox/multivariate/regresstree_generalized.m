@@ -2,10 +2,10 @@
 
 disp('===== Regression Tree ====');
 disp('Reading featur vector');
-num_data = 10000 % size(featurs,1); %5000;
+num_data = size(featurs,1); %5000;
 
 
-featurization = 'multinomial'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
+featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
 
 
 featurs = csvread('data\forWeka_featuresonly.csv');
