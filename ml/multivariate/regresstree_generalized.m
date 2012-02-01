@@ -1,23 +1,19 @@
-% predicting numerical values using CCA
+% predicting numerical values using regression tree
 clear all;
-format long
-disp('===== Linear CCA for Regression ====');
-disp('Reading featur vector');
 
+disp('===== Regression Tree ====');
+disp('Reading featur vector');
+num_data = size(featurs,1); %5000;
 
 
 for feat = 1:3
     possiblefeaturizations =  {'bernouli', 'tfidf','multinomial'}
     %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
-    featurization  = possiblefeaturizations{feat}    
-    featurs = csvread('data\forWeka_featuresonly.csv');    
-    featurs = featurs(:,2:size(featurs,2));
-    
-    
-    num_data = size(featurs,1); %5000;
-    
-    
+    featurization  = possiblefeaturizations{feat}
     disp(sprintf('Number of datapoints %d',num_data))
+    
+    featurs = csvread('data\forWeka_featuresonly.csv');
+    featurs = featurs(:,2:size(featurs,2));
     if strcmp(featurization,'multinomial')
         %just pass
     elseif strcmp(featurization,'bernouli')
@@ -57,29 +53,24 @@ for feat = 1:3
     responsevals_training = responsevals(1:size_training,:);
     responsevals_test = responsevals((size_training+1):num_data,:);
     
-    disp('Linear CCA ');
+    disp('Regression Tree');
     % http://www.mathworks.com/help/toolbox/stats/classregtree.html
     
     tic;
     
     predictions = [];
     actual = [];
+    for i =1:3
+        a = responsevals_training(:,i)';
+        b = responsevals_test(:,i)';
+        class = classregtree(trainingset,a');
+        yfit = (eval(class,testset));
+        predictions = [predictions, yfit];
+        actual = [actual, b'];
+    end
     
     
-    [Wx, Wy, r, U, V]  = canoncorr(trainingset,responsevals_training);
-    % in [A,B,r,U,V],  U and V are cannonical scores
-    % U = (X-repmat(mean(X),N,1))*A
-    % V = (Y-repmat(mean(Y),N,1))*B
-
-    
-    %recheck this part 
-    N =  size(testset,1)
-    predictions = ((testset-repmat(mean(testset),N,1))*Wx*pinv(Wy));
-    actual = responsevals_test-repmat(mean(responsevals_test),N,1);
-     
     MSE = mean(sum(((predictions-actual).^2)'))
     toc;
     
 end
-
-
