@@ -5,7 +5,7 @@ disp('Reading featur vector');
 num_data = 800 % size(featurs,1); %5000;
 
 
-featurization = 'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
+featurization = 'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
 
 
 featurs = csvread('data\forWeka_featuresonly.csv');
