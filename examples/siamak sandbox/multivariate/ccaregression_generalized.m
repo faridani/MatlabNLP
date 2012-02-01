@@ -9,8 +9,8 @@ disp('Reading featur vector');
 for feat = 1:3
     possiblefeaturizations =  {'bernouli', 'tfidf','multinomial'}
     %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
-    featurization  = possiblefeaturizations{feat}    
-    featurs = csvread('data\forWeka_featuresonly.csv');    
+    featurization  = possiblefeaturizations{feat}
+    featurs = csvread('data\forWeka_featuresonly.csv');
     featurs = featurs(:,2:size(featurs,2));
     
     
@@ -70,13 +70,13 @@ for feat = 1:3
     % in [A,B,r,U,V],  U and V are cannonical scores
     % U = (X-repmat(mean(X),N,1))*A
     % V = (Y-repmat(mean(Y),N,1))*B
-
     
-    %recheck this part 
+    
+    %recheck this part
     N =  size(testset,1)
-    predictions = ((testset-repmat(mean(testset),N,1))*Wx*pinv(Wy));
-    actual = responsevals_test-repmat(mean(responsevals_test),N,1);
-     
+    predictions = ((testset-repmat(mean(testset),N,1))*Wx*pinv(Wy))+repmat(mean(responsevals_test),N,1);
+    actual = responsevals_test;
+    
     MSE = mean(sum(((predictions-actual).^2)'))
     toc;
     
