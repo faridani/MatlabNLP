@@ -6,7 +6,7 @@ disp('Reading featur vector');
 
 
 
-for feat = 1:1
+for feat = 1:3
     possiblefeaturizations =  {'bernouli', 'tfidf','multinomial'}
     %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
     featurization  = possiblefeaturizations{feat}
@@ -22,11 +22,9 @@ for feat = 1:1
     if strcmp(featurization,'multinomial')
         %just pass
     elseif strcmp(featurization,'bernouli')
-        featurs = double(featurs>0);
+        featurs = bernoulli(featurs);
     elseif strcmp(featurization,'tfidf')
-        occurance = (featurs>0);
-        idf = log(size(featurs,1)./sum(occurance));
-        featurs = featurs.*repmat( idf, size(featurs,1),1);
+        featurs = tfidf(featurs);
     end
     
     
