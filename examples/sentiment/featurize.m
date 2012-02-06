@@ -38,6 +38,7 @@ g = containers.Map();
 
 
 for i = 1:size(inputcellarray,1)
+    fprintf('%d/%d ', i, size(inputcellarray,1));
     comment = inputcellarray{i};
     comment = SanitizeComment(comment);
     comment = lower(comment);
@@ -84,6 +85,7 @@ headers = keys(selectedheaders);
 
 outputMatrix = zeros(size(inputcellarray,1),length(headers));
 for i = 1:size(inputcellarray,1)
+    fprintf('%d/%d ', i, size(inputcellarray,1));
     comment = inputcellarray{i};
     comment = SanitizeComment(comment);
     comment = lower(comment);
@@ -111,7 +113,7 @@ for i = 1:size(inputcellarray,1)
 end
 
 
-featureVector = outputMatrix
+featureVector = outputMatrix;
 %csvwrite('forWeka_featuresonly.csv', outputMatrix);
 
 end
