@@ -18,8 +18,8 @@ function featureVector = featurize(inputcellarray, nminFeatures, removeStopWords
 addpath('funcs');
 inputcellarray = {' MATLAB desktop keyboard shortcuts, such as Ctrl+S,  are now customizable.';' To customize keyboard shortcuts, use Preferences. From there, you can also  restore previous default settings by following the steps outlined in Help.'}
 nminFeatures = 1;
-removeStopWords = 0;
-doStem =0;
+removeStopWords = 1;
+doStem =1;
 
 
 %
