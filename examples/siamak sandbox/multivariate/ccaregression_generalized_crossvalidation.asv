@@ -1,4 +1,5 @@
 % predicting numerical values using CCA
+
 clear all;
 format long
 disp('===== Linear CCA for Regression cross valudation ====');
@@ -95,12 +96,12 @@ featurization  = possiblefeaturizations{feat}
 fprintf('avergae MSE for primal CCA is %0.10f\n', mean(MSEarray));
 subplot(3,2,feat*2-1)
 plot(MSEarray,'-o');
-title(strcat('MSE Primal CCA (',featurization,')'));
+title(strcat('MSE Primal CCA (',featurization,') ', sprintf(' avergae MSE = %0.10f\n', mean(MSEarray))));
 xlabel('10 fold cross-validation (iteration no)')
 ylabel('MSE')
 subplot(3,2,feat*2)
 plot(elapsedarray,'-o');
-title(strcat('Elapsed time for Primal CCA (',featurization, ')'));
+title(strcat('Elapsed time for Primal CCA (',featurization, ') ' , sprintf(' avergae elapsed time = %0.10f\n', mean(elapsedarray))));
 xlabel('10 fold cross-validation (iteration no)')
 ylabel('Elapsed Time')
 drawnow;
