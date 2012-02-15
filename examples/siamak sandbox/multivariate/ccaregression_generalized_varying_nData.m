@@ -89,18 +89,34 @@ for nData =500:500:25000
     end
 end
 toc;
+save('runResultsforCCA.dump','runResults');
+
+% after loading
+% runResults = runResultsforCCA;
 
 figure;
 hold on;
 [row,col] = find(runResults==1);
-x = runResults(row,1);
-y = runResults(row,3);
-plot(x,y,'r','LineWidth',2 )
+x1 = runResults(row,1);
+y1 = runResults(row,3);
+plot(x1,y1,'r','LineWidth',2 )
 [row,col] = find(runResults==2);
-x = runResults(row,1);
-y = runResults(row,3);
-plot(x,y,'b','LineWidth',2 )
+x2 = runResults(row,1);
+y2 = runResults(row,3);
+plot(x2,y2,'b','LineWidth',2 )
 [row,col] = find(runResults==3);
-x = runResults(row,1);
-y = runResults(row,3);
-plot(x,y,'g','LineWidth',2 )
+x3 = runResults(row,1);
+y3 = runResults(row,3);
+plot(x3,y3,'g','LineWidth',2 )
+
+
+figure
+plot(x1,y1,'-',x2,y2,':',x3,y3,'-.');
+hleg = legend('Bernoulli','tf-idf','Multinomial',...
+              'Location','NorthEast')
+% Make the text of the legend italic and color it brown
+set(hleg,'FontAngle','italic','TextColor',[.3,.2,.1])
+title('MSE Error vs. Number of Reviews Used in Model') 
+ylabel('Mean Squared Error');
+xlabel('Number of reviews used for model evaluation');
+set(gca,'XTickLabel',[0, 5000,10000,15000,20000,25000])

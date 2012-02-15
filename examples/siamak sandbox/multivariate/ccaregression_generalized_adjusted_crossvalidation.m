@@ -1,30 +1,32 @@
 % predicting numerical values using CCA
-clc;
+% large values and small values are corrected
 
 clear all;
 format long
-warning off all;
-
 disp('===== Linear CCA for Regression ====');
-%disp('Reading featur vector');
+disp('Reading featur vector');
 
-runResults = [];
-tic;
+Indices = crossvalind('Kfold', 26548, 10);
+figure;
 
-for nData =500:500:25000
-    for feat = 1:3
+subplot(3,2,1);
+
+for feat = 1:3
+    MSEarray =[];
+    elapsedarray =[];
+    for crossvalidateIter = 1:10
+        (fprintf('%d',crossvalidateIter));
         possiblefeaturizations =  {'bernouli', 'tfidf','multinomial'};
         %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
         featurization  = possiblefeaturizations{feat};
         featurs = csvread('data\forWeka_featuresonly.csv');
         featurs = featurs(:,2:size(featurs,2));
         
-        % killed my computer ones featurs = sparse(featurs);
         
-        num_data = nData; %size(featurs,1); %5000;
+        num_data = size(featurs,1); %5000;
         
         
-        disp(sprintf('Number of datapoints %d',num_data))
+        %disp(sprintf('Number of datapoints %d',num_data))
         if strcmp(featurization,'multinomial')
             %just pass
         elseif strcmp(featurization,'bernouli')
@@ -34,12 +36,11 @@ for nData =500:500:25000
         end
         
         
-        size_training = floor(.8*num_data);
+        size_training = floor(.9*num_data);
         
         
-        trainingset = featurs(1:size_training,:);
-        testset = featurs((size_training+1):num_data,:);
-        
+        trainingset = featurs(Indices~=crossvalidateIter,:);
+        testset = featurs(Indices==crossvalidateIter,:);
         
         %disp('Splitting up data into training/test sets');
         [num,txt,raw] = xlsread('data\final104.xls');
@@ -59,16 +60,16 @@ for nData =500:500:25000
         
         responsevals = [style_ratings, comfort_ratings, overal_ratings];
         
-        responsevals_training = responsevals(1:size_training,:);
-        responsevals_test = responsevals((size_training+1):num_data,:);
+        responsevals_training = responsevals(Indices~=crossvalidateIter,:);
+        responsevals_test = responsevals(Indices==crossvalidateIter,:);
         
-        
+        %disp('Adjusted Linear CCA ');
         % http://www.mathworks.com/help/toolbox/stats/classregtree.html
         
+        tic;
         
-        
-        predictions = [];
-        actual = [];
+        %predictions = [];
+        %actual = [];
         
         
         [Wx, Wy, r, U, V]  = canoncorr(trainingset,responsevals_training);
@@ -81,42 +82,28 @@ for nData =500:500:25000
         N =  size(testset,1);
         predictions = ((testset-repmat(mean(testset),N,1))*Wx*pinv(Wy))+repmat(mean(responsevals_test),N,1);
         actual = responsevals_test;
-        
+        predictions( predictions>5)=5;
+        predictions( predictions<1)=1;
         MSE = mean(sum(((predictions-actual).^2)'));
-        runResults = [runResults; nData, feat, MSE];
-        
+        elapsed = toc;
+        MSEarray = [MSEarray MSE];
+        elapsedarray = [elapsedarray elapsed];
         
     end
+    featurization  = possiblefeaturizations{feat}
+    fprintf('avergae MSE for adjusted CCA is %0.10f\n', mean(MSEarray));
+    subplot(3,2,feat*2-1)
+    plot(MSEarray,'-o');
+    title(strcat('MSE adjusted CCA (',featurization,') ', sprintf(' avergae MSE = %0.10f\n', mean(MSEarray))));
+    xlabel('10 fold cross-validation (iteration no)')
+    ylabel('MSE')
+    subplot(3,2,feat*2)
+    plot(elapsedarray,'-o');
+    title(strcat('Elapsed time for adjusted CCA (',featurization, ') ' , sprintf(' avergae elapsed time = %0.10f\n', mean(elapsedarray))));
+    xlabel('10 fold cross-validation (iteration no)')
+    ylabel('Elapsed Time')
+    drawnow;
 end
-toc;
-save('runResultsforCCA.dump','runResults');
-
-% after loading
-% runResults = runResultsforCCA;
-
-figure;
-hold on;
-[row,col] = find(runResults==1);
-x1 = runResults(row,1);
-y1 = runResults(row,3);
-plot(x1,y1,'r','LineWidth',2 )
-[row,col] = find(runResults==2);
-x2 = runResults(row,1);
-y2 = runResults(row,3);
-plot(x2,y2,'b','LineWidth',2 )
-[row,col] = find(runResults==3);
-x3 = runResults(row,1);
-y3 = runResults(row,3);
-plot(x3,y3,'g','LineWidth',2 )
 
 
-figure
-plot(x1,y1,'-',x2,y2,':',x3,y3,'-.');
-hleg = legend('Bernoulli','tf-idf','Multinomial',...
-              'Location','NorthEast')
-% Make the text of the legend italic and color it brown
-set(hleg,'FontAngle','italic','TextColor',[.3,.2,.1])
-title('MSE Error vs. Number of Reviews Used in Model') 
-ylabel('Mean Squared Error');
-xlabel('Number of reviews used for model evaluation');
-set(gca,'XTickLabel',[0, 5000,10000,15000,20000,25000])
+

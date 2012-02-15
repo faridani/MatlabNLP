@@ -81,6 +81,8 @@ for nData =500:500:25000
         N =  size(testset,1);
         predictions = ((testset-repmat(mean(testset),N,1))*Wx*pinv(Wy))+repmat(mean(responsevals_test),N,1);
         actual = responsevals_test;
+        predictions( predictions>5)=5;
+        predictions( predictions<1)=1;
         
         MSE = mean(sum(((predictions-actual).^2)'));
         runResults = [runResults; nData, feat, MSE];
@@ -91,8 +93,6 @@ end
 toc;
 save('runResultsforCCA.dump','runResults');
 
-% after loading
-% runResults = runResultsforCCA;
 
 figure;
 hold on;
@@ -111,12 +111,9 @@ plot(x3,y3,'g','LineWidth',2 )
 
 
 figure
-plot(x1,y1,'-',x2,y2,':',x3,y3,'-.');
+plot(x1,y1,x2,y2,x3,y3);
 hleg = legend('Bernoulli','tf-idf','Multinomial',...
-              'Location','NorthEast')
+    'Location','NorthEastOutside')
 % Make the text of the legend italic and color it brown
 set(hleg,'FontAngle','italic','TextColor',[.3,.2,.1])
-title('MSE Error vs. Number of Reviews Used in Model') 
-ylabel('Mean Squared Error');
-xlabel('Number of reviews used for model evaluation');
-set(gca,'XTickLabel',[0, 5000,10000,15000,20000,25000])
+title('Error vs. Number of Reviews')
