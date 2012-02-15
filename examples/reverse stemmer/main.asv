@@ -1,0 +1,59 @@
+% Finds unique words and their stems
+
+clc;
+close all;
+clear all;
+tic;
+%%
+% reading the stopwords file into the memory
+
+myDirectory ='C:\Users\siamak\Dropbox\CCA\GM top stems';
+
+disp 'Revese Stemmer by Siamak Faridani'
+disp '--------------------------'
+
+
+% you can use stopwords array for stop words now
+
+disp 'Reading corpus'
+% the corpus is in input.txt
+fid1 = fopen('input.txt','r');
+fid2 = fopen('output.txt','w');
+
+stems = {};
+origwords ={};
+stemcount=[];
+while ~feof(fid1)
+    line = fgets(fid1); %# read line by line
+   
+    
+    comment = SanitizeComment(line);
+    comment = lower(comment);
+    r=regexp(comment,' ','split');
+    
+    for st = 1:size(r,2)
+            
+            try
+                myindex = isempty(strmatch(r(st),origwords, 'exact'))
+            catch
+                myindex = 1;
+            end
+            
+            if myindex
+            fprintf(fid2,'%s,%s\n',char(r(st)),porterStemmer(cell2mat(r(st))));
+            %cprintf('text', '%s-->%s\n', char(r(st)),porterStemmer(cell2mat(r(st))) ); 
+            stems{end+1} = porterStemmer(cell2mat(r(st)));
+            origwords{end+1} = r(st);
+            stemcount=[stemcount,1];
+            else
+                
+                stemcount(myindex) =  stemcount(myindex)+1;
+            end
+            
+    end
+end
+fclose(fid1);
+fclose(fid2);
+
+    
+

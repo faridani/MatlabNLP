@@ -1,0 +1,18 @@
+function output = tfidf(featurs)
+% Takes a feature vector and returns the tfidf vector
+%
+% by Siamak Faridani, UC Berkeley, 2/2/2012
+% 
+% inputs:
+%       features
+% output:
+%       tfidf
+
+
+    occurance = (featurs>0);
+    idf = repmat(log(size(featurs,1)./sum(occurance)), size(featurs,1),1);
+	tf = featurs.* repmat((sum(featurs').^(-1))',1,size(featurs,2));
+    
+    if 
+    output = tf.*idf;
+end
