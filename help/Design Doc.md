@@ -1,9 +1,6 @@
 Matlab NLP (Design Doc)
 ==================================
 
-Each folder has a sandbox subfolder that is used for developing tools and functions for NLP.
-
-When scripts graduate from the sandbox they are stored in the main folder like “ml”. ml folder will have a “unit tests” subfolder that will contain the unit tests for those scripts that are inside the ml folder.
 
 Style guide for developers
 -------------------------------
