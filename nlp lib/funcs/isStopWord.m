@@ -8,6 +8,7 @@ function out1 = isStopWord(in1,in2)
         if (size(in1)==size((in2{k,1}))) % they need to be the same size so we can compare
             if (in1==in2{k,1})
                 out1 = 1;
+                return;
             end
             
         end

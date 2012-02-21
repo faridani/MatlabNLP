@@ -20,7 +20,7 @@ function featureVector = featurize(inputcellarray, nminFeatures, removeStopWords
 
 
 % Test case:
-addpath('funcs');
+
 %inputcellarray = {' MATLAB desktop keyboard shortcuts, such as Ctrl+S,  are now customizable.';' To customize keyboard shortcuts, use Preferences. From there, you can also  restore previous default settings by following the steps outlined in Help.'}
 %nminFeatures = 1;
 %removeStopWords = 1;
@@ -120,6 +120,6 @@ end
 
 featureVector = outputMatrix;
 %csvwrite('forWeka_featuresonly.csv', outputMatrix);
-
+disp('Note: use featurize_bigram for the updated version')
 end
 
