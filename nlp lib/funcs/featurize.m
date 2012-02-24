@@ -64,7 +64,7 @@ for i = 1:size(inputcellarray,1)
         
         if isKey(g, word) && tfflag
             g(word) = g(word)+1;
-        elseif tfflag
+        elseif tfflag && (~strcmp(word,' ')) && (~strcmp(word,''))
             g(word) = 1;
         end
         
