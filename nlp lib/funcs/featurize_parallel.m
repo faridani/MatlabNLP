@@ -39,6 +39,13 @@ function [featureVector,selectedheaderskeys] = featurize_parallel(inputcellarray
 
 %
 
+if size(inputcellarray,1)==1
+    disp 'ERROR: you are probably sending a row vector to this function, the size of the cell array should be (n,1)'
+    featureVector = [];
+    selectedheaderskeys =[];
+    return
+end
+
 isOpen = matlabpool('size') > 0;
 if isOpen
     matlabpool close
