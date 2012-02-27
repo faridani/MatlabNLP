@@ -28,8 +28,8 @@ end
 
 hist(outputdata,500)
 tic
-
-[featureVector,selectedheaderskeys] = featurize_parallel(outputdesc', 1, 0, 0, 1, 4);
+%featurize_parallel(inputcellarray, nminFeatures, removeStopWords, doStem, grams, cores)
+[featureVector,selectedheaderskeys] = featurize_parallel(outputdesc', 20, 0, 1, 1, 4);
 toc
 csvwrite('data\productsdesc.csv', featureVector);
 csvwrite('data\productsvocab.csv', selectedheaderskeys);
