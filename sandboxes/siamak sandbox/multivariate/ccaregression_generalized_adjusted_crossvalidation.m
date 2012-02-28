@@ -40,7 +40,7 @@ for feat = 1:1
         elseif strcmp(featurization,'logmultinomial3')
             featurs = (log(featurs+1));       
         elseif strcmp(featurization,'all')
-            featurs = [bernoulli(featurs), featurs, tfidf(featurs), (log(featurs+1))] ;            
+            featurs = [bernoulli(featurs), tfidf(featurs), (log(featurs+1))] ;            
         
         end
         
