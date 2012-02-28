@@ -1,1 +1,0 @@
- [style_ratings,comfort_ratings,overal_ratings, outputMatrix]
