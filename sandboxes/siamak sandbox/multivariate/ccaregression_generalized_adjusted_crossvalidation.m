@@ -9,14 +9,14 @@ disp('Reading featur vector');
 Indices = crossvalind('Kfold', 26548, 10);
 figure;
 
-subplot(3,2,1);
+subplot(6,2,1);
 
-for feat = 1:3
+for feat = 1:6
     MSEarray =[];
     elapsedarray =[];
     for crossvalidateIter = 1:10
         (fprintf('%d',crossvalidateIter));
-        possiblefeaturizations =  {'bernouli', 'tfidf','multinomial'};
+        possiblefeaturizations =  {'logmultinomial', 'logmultinomial2', 'logmultinomial3','bernouli', 'tfidf','multinomial'};
         %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
         featurization  = possiblefeaturizations{feat};
         featurs = csvread('data\forWeka_featuresonly.csv');
@@ -33,6 +33,12 @@ for feat = 1:3
             featurs = bernoulli(featurs);
         elseif strcmp(featurization,'tfidf')
             featurs = tfidf(featurs);
+        elseif strcmp(featurization,'logmultinomial')
+            featurs = log(featurs+1)./log(2);
+        elseif strcmp(featurization,'logmultinomial2')
+            featurs = round(log(featurs+1)./log(2)); 
+        elseif strcmp(featurization,'logmultinomial3')
+            featurs = (log(featurs+1));            
         end
         
         
@@ -92,12 +98,12 @@ for feat = 1:3
     end
     featurization  = possiblefeaturizations{feat}
     fprintf('avergae MSE for adjusted CCA is %0.10f\n', mean(MSEarray));
-    subplot(3,2,feat*2-1)
+    subplot(6,2,feat*2-1)
     plot(MSEarray,'-o');
     title(strcat('MSE adjusted CCA (',featurization,') ', sprintf(' avergae MSE = %0.10f\n', mean(MSEarray))));
     xlabel('10 fold cross-validation (iteration no)')
     ylabel('MSE')
-    subplot(3,2,feat*2)
+    subplot(6,2,feat*2)
     plot(elapsedarray,'-o');
     title(strcat('Elapsed time for adjusted CCA (',featurization, ') ' , sprintf(' avergae elapsed time = %0.10f\n', mean(elapsedarray))));
     xlabel('10 fold cross-validation (iteration no)')
