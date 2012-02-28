@@ -11,12 +11,12 @@ figure;
 
 subplot(6,2,1);
 
-for feat = 1:6
+for feat = 1:1
     MSEarray =[];
     elapsedarray =[];
     for crossvalidateIter = 1:10
         (fprintf('%d',crossvalidateIter));
-        possiblefeaturizations =  {'logmultinomial', 'logmultinomial2', 'logmultinomial3','bernouli', 'tfidf','multinomial'};
+        possiblefeaturizations =  {'all','logmultinomial', 'logmultinomial2', 'logmultinomial3','bernouli', 'tfidf','multinomial'};
         %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
         featurization  = possiblefeaturizations{feat};
         featurs = csvread('data\forWeka_featuresonly.csv');
@@ -38,7 +38,10 @@ for feat = 1:6
         elseif strcmp(featurization,'logmultinomial2')
             featurs = round(log(featurs+1)./log(2)); 
         elseif strcmp(featurization,'logmultinomial3')
-            featurs = (log(featurs+1));            
+            featurs = (log(featurs+1));       
+        elseif strcmp(featurization,'all')
+            featurs = [bernoulli(featurs), featurs, tfidf(featurs), (log(featurs+1))] ;            
+        
         end
         
         
