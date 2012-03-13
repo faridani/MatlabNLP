@@ -5,63 +5,90 @@ disp('===== Linear Regression ====');
 disp('Reading featur vector');
 
 
-
-Indices = crossvalind('Kfold', 26548, 10);
 figure;
-
-subplot(3,2,1);
+possiblefeaturizations =  {'all','logmultinomial', 'logmultinomial2', 'logmultinomial3','bernouli', 'tfidf','multinomial'};
+possiblefeaturizations =  {'bernouli', 'tfidf','multinomial'};
+       
+subplot(6,2,1);
 
 for feat = 1:3
       MSEarray =[];
     elapsedarray =[];
     for crossvalidateIter = 1:10
-        (fprintf('%d',crossvalidateIter));
-    featurs = csvread('data\forWeka_featuresonly.csv');
-    num_data = size(featurs,1); %5000;
-    %disp(sprintf('Number of datapoints %d',num_data))
-    
-    possiblefeaturizations =  {'bernouli', 'tfidf','multinomial'};
-    %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
-    featurization  = possiblefeaturizations{feat};
-    
-    
-    featurs = featurs(:,2:size(featurs,2));
-    if strcmp(featurization,'multinomial')
-        %just pass
-    elseif strcmp(featurization,'bernouli')
-        featurs = bernoulli(featurs);
-    elseif strcmp(featurization,'tfidf')
-        featurs = tfidf(featurs);
-    end
-    
-     size_training = floor(.9*num_data);
+       (fprintf('%d',crossvalidateIter));
+     
+        %disp('Splitting up data into training/test sets');
+        [num,txt,raw] = xlsread('data\final106.xls');
+        
+        % reading the description of each shoe
+        descriptions = raw(2:size(raw,1),2);
+        style_ratings = num(1:size(num,1),1);
+        comfort_ratings = num(1:size(num,1),4);
+        overal_ratings = num(1:size(num,1),5);
+        shoe_width = num(1:size(num,1),6);
+        shoe_size_rating = num(1:size(num,1),9);
+        shoe_arch_rating = num(1:size(num,1),10);
+        
+%         % only take m data points
+%         m=num_data;
+%         descriptions = descriptions(1:m);
+%         style_ratings = style_ratings(1:m);
+%         comfort_ratings = comfort_ratings(1:m);
+%         overal_ratings = overal_ratings(1:m);
+%         shoe_width = shoe_width(1:m);
+%         shoe_size_rating = shoe_size_rating(1:m);
+%         shoe_arch_rating =  shoe_arch_rating(1:m);
+        valididx = (~isnan(shoe_width) & ~isnan( shoe_arch_rating)) & ~isnan(shoe_size_rating);
+        
+        descriptions = descriptions(valididx);
+        style_ratings = style_ratings(valididx);
+        comfort_ratings = comfort_ratings(valididx);
+        overal_ratings = overal_ratings(valididx);
+        shoe_width = shoe_width(valididx);
+        shoe_size_rating = shoe_size_rating(valididx);
+        shoe_arch_rating =  shoe_arch_rating(valididx);
+        Indices = crossvalind('Kfold', sum(valididx), 10);
+        
+                %featurization = 'bernouli'%'tfidf'%'tfidf'%'multinomial'%'tfidf' %'multinomial'; % 'bernouli', 'tfidf'
+        featurization  = possiblefeaturizations{feat};
+        featurs = csvread('data\forWeka_featuresonly.csv');
+        featurs = featurs(:,2:size(featurs,2));
+        
+        featurs = featurs(valididx,:);
+        num_data = size(featurs,1); %5000;
+        
+        
+        %disp(sprintf('Number of datapoints %d',num_data))
+        if strcmp(featurization,'multinomial')
+            %just pass
+        elseif strcmp(featurization,'bernouli')
+            featurs = bernoulli(featurs);
+        elseif strcmp(featurization,'tfidf')
+            featurs = tfidf(featurs);
+        elseif strcmp(featurization,'logmultinomial')
+            featurs = log(featurs+1)./log(2);
+        elseif strcmp(featurization,'logmultinomial2')
+            featurs = round(log(featurs+1)./log(2)); 
+        elseif strcmp(featurization,'logmultinomial3')
+            featurs = (log(featurs+1));       
+        elseif strcmp(featurization,'all')
+            featurs = [bernoulli(featurs), tfidf(featurs), (log(featurs+1))] ;            
+        
+        end
+        
+        
+        size_training = floor(.9*num_data);
         
         
         trainingset = featurs(Indices~=crossvalidateIter,:);
         testset = featurs(Indices==crossvalidateIter,:);
+   
         
-    
-    %disp('Splitting up data into training/test sets');
-    [num,txt,raw] = xlsread('data\final104.xls');
-    
-    % reading the description of each shoe
-    descriptions = raw(2:size(raw,1),2);
-    style_ratings = num(1:size(num,1),1);
-    comfort_ratings = num(1:size(num,1),4);
-    overal_ratings = num(1:size(num,1),5);
-    
-    % only take m data points
-    m=num_data;
-    descriptions = descriptions(1:m);
-    style_ratings = style_ratings(1:m);
-    comfort_ratings = comfort_ratings(1:m);
-    overal_ratings = overal_ratings(1:m);
-    
-    responsevals = [style_ratings, comfort_ratings, overal_ratings];
-    
-  
+        responsevals = [style_ratings, comfort_ratings, overal_ratings,shoe_width,shoe_size_rating,shoe_arch_rating];
+        
         responsevals_training = responsevals(Indices~=crossvalidateIter,:);
         responsevals_test = responsevals(Indices==crossvalidateIter,:);
+        
          
     %disp('Linear Regression');
     % 
