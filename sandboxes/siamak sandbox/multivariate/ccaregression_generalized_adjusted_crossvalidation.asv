@@ -6,13 +6,16 @@ format long
 disp('===== Linear CCA for Regression ====');
 disp('Reading featur vector');
 
-for helel_data = [100]%,200,400,800,1200,1500, 2000]
+output_mean_mse_array = zeros(7,9);
+colinoutput = 0;
+for helel_data = [100,200,400,800,1200,1500, 2000,5000,10000]
+    colinoutput = colinoutput+1;
     Indices = crossvalind('Kfold',helel_data , 10);%crossvalind('Kfold', 26548, 10);
     figure;
     
     subplot(7,2,1);
     
-    for feat = 1:1
+    for feat = 1:7
         MSEarray =[];
         elapsedarray =[];
         for crossvalidateIter = 1:10
@@ -114,8 +117,9 @@ for helel_data = [100]%,200,400,800,1200,1500, 2000]
         title(strcat('Elapsed time for adjusted CCA (',featurization, ') ' , sprintf(' avergae elapsed time = %0.10f\n', mean(elapsedarray))));
         xlabel('10 fold cross-validation (iteration no)')
         ylabel('Elapsed Time')
-        mtit(sprintf('%d datapoints',))
+        mtit(sprintf('%d datapoints',helel_data))
         drawnow;
+        output_mean_mse_array(feat,colinoutput) = mean(MSEarray);
     end
     
 end
