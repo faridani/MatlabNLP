@@ -18,7 +18,7 @@ Components
 * Learning Models
     * Naive Bayes
 	* Logistic Regression
-	* SVM
+	* SVM(Support Vector Machine)
 	* Linear Regression
 * Evaluation Measures
     * Precision
