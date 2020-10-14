@@ -2,7 +2,7 @@ MatlabNLP is a collection of efficient algorithms, data structures and well-test
 
 Objective
 ==================
-To produce a collection of useful NLP tools for MATLAB
+To produce a collection of useful NLP(Natural Language Processing) tools for MATLAB(Matrix Laboratory)
 
 Components
 ==================
